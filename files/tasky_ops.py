@@ -23,6 +23,7 @@ import os
 import sys
 import subprocess
 import datetime
+import csv
 from .taskylog import TaskyLog
 
 
@@ -68,15 +69,6 @@ class OSFunctions:
 
     @staticmethod
     def resource_path(relative_path):
-        """
-    - This function returns the absolute path from a given relative path of a file/folder
-    - However, here it has been defined to facilitate embedding asset files into the bundled EXE file made using `pyinstaller` module
-    - This is a workaround for `pyinstaller` to easily find asset files while bundling the EXE file
-
-        :param relative_path:
-        :return absolute_path:
-        """
-
         try:
             base_path = sys._MEIPASS
         except Exception:
@@ -98,6 +90,13 @@ class OSFunctions:
 
 
 class Functions:
+    PRIORITY_SCORES = {
+        "low": 1,
+        "medium": 2,
+        "high": 3,
+        "critical": 4,
+    }
+
     def __init__(self):
         self.TL = TaskyLog()
         self.TL.info("Tasky's functions accessed")
@@ -105,6 +104,7 @@ class Functions:
         self.taskymain_path = Path.home() / "Tasky"
         self.tasks_path = self.taskymain_path / "newtasks.txt"
         self.old_tasks_path = self.taskymain_path / 'tasks.txt'
+        self.meta_tasks_path = self.taskymain_path / 'tasks_meta.txt'
         self.check_tasks_txt()
 
         self.old_tasks = []
@@ -116,7 +116,7 @@ class Functions:
         }
 
         self.month_names = {
-            1:  "january", 2:  "february", 3: "march", 4: "april",
+            1: "january", 2: "february", 3: "march", 4: "april",
             5: "may", 6: "june", 7: "july", 8: "august",
             9: "september", 10: "october", 11: "november", 12: "december",
         }
@@ -134,7 +134,7 @@ class Functions:
                     ">:(", ">:)", "._.", ".-.", "O_O", "LOL", "LMAO", "-_-",
                     ">_<", "(:", "):", "D:", ":^*", ";-;", ":'D", ":')", ":'("]
 
-        self.TL.info(f"defined datasets for months, month names and special inputs")
+        self.TL.info("defined datasets for months, month names and special inputs")
 
     def tasky_version(self, left_width=23, link=False):
         t_width = 60
@@ -146,13 +146,13 @@ class Functions:
             licc = f"<a href='{licc}'> View License </a>"
 
         about = '\n'.join((
-            '-' * t_width + "<br>"*link,
-            '  About Tasky  '.center(t_width, '-') + "<br>"*link,
-            f'\n{"VERSION".ljust(l_width)} = {AboutTasky.version}{"<br>"*link}',
-            f'{"RELEASE DATE".ljust(l_width)} = {AboutTasky.release}{"<br>"*link}',
-            f'{"CREATOR".ljust(l_width)} = {AboutTasky.creator}{"<br>"*link}',
-            f'{"SOURCE CODE".ljust(l_width)} = {github}{"<br>"*link}',
-            f'{"LICENSE".ljust(l_width)} = {licc}{"<br>"*link}',
+            '-' * t_width + "<br>" * link,
+            '  About Tasky  '.center(t_width, '-') + "<br>" * link,
+            f'\n{"VERSION".ljust(l_width)} = {AboutTasky.version}{"<br>" * link}',
+            f'{"RELEASE DATE".ljust(l_width)} = {AboutTasky.release}{"<br>" * link}',
+            f'{"CREATOR".ljust(l_width)} = {AboutTasky.creator}{"<br>" * link}',
+            f'{"SOURCE CODE".ljust(l_width)} = {github}{"<br>" * link}',
+            f'{"LICENSE".ljust(l_width)} = {licc}{"<br>" * link}',
             '-' * t_width
         ))
         return about
@@ -163,12 +163,27 @@ class Functions:
 
     def check_tasks_txt(self):
         self.taskymain_path.mkdir(parents=True, exist_ok=True)
-        open(self.tasks_path, "a").close()
-        open(self.old_tasks_path, "a").close()
+        open(self.tasks_path, "a", encoding="utf-8").close()
+        open(self.old_tasks_path, "a", encoding="utf-8").close()
+        open(self.meta_tasks_path, "a", encoding="utf-8").close()
+
+    def _read_text_compatible(self, path):
+        for enc in ("utf-8", "utf-8-sig", "gbk", "cp1252", "latin-1"):
+            try:
+                with open(path, "r", encoding=enc) as f:
+                    return f.read()
+            except UnicodeDecodeError:
+                continue
+        with open(path, "r", encoding="utf-8", errors="replace") as f:
+            return f.read()
 
     def read_tasks_file(self):
         self.check_tasks_txt()
-        return open(self.tasks_path).read()
+        return self._read_text_compatible(self.tasks_path)
+
+    def read_meta_tasks_file(self):
+        self.check_tasks_txt()
+        return self._read_text_compatible(self.meta_tasks_path)
 
     @staticmethod
     def is_leap(year):
@@ -177,13 +192,11 @@ class Functions:
     def timediff(self, tt, diff_of: list = False, tasky_output=True):
         self.TL.function(f"timediff({tt})")
 
-        # time now
         if not diff_of:
             tny, tnm, tnd, tnh, tnmin = self.return_datetime_now_parts()
         else:
             tny, tnm, tnd, tnh, tnmin = diff_of
 
-        # task time, tt -> "yy:mm:dd:HH:MM"
         tty, ttm, ttd, tth, ttmin = tt.split(":")
 
         diffy = int(tty) - int(tny)
@@ -195,9 +208,6 @@ class Functions:
         if diffmin < 0:
             diffmin += 60
             diffh -= 1
-            # e.g. 2:20 - 1:40,
-            # diffh = 2 - 1 = 1, diffmin = 20 - 40 = -20
-            # implies => diffh - 1 = 0 hours, and diffmin = -20 + 60 = 40 minutes
 
         if diffh < 0:
             diffh += 24
@@ -205,7 +215,7 @@ class Functions:
 
         if diffd < 0:
             diffd += self.months.get(tnm)
-            if int(tnm) == 2 and not self.is_leap(tny):  # self.months[2] = 29 by default
+            if int(tnm) == 2 and not self.is_leap(tny):
                 diffd -= 1
             diffm -= 1
 
@@ -219,125 +229,221 @@ class Functions:
         if diffy < 0:
             output = "Task Expired".rjust(19)
         else:
-            output = f"{(f'{diffy}y' * any((diffy,))).rjust(3)} " \
-                     f"{(f'{diffm}M' * any((diffy, diffm))).rjust(3)} " \
-                     f"{(f'{diffd}d' * any((diffy, diffm, diffd))).rjust(3)} " \
-                     f"{(f'{diffh}h' * any((diffy, diffm, diffd, diffh))).rjust(3)} " \
-                     f"{(f'{diffmin}m' * any((diffy, diffm, diffd, diffh, diffmin))).rjust(3)}"
+            output = (
+                f"{(f'{diffy}y' * any((diffy,))).rjust(3)} "
+                f"{(f'{diffm}M' * any((diffy, diffm))).rjust(3)} "
+                f"{(f'{diffd}d' * any((diffy, diffm, diffd))).rjust(3)} "
+                f"{(f'{diffh}h' * any((diffy, diffm, diffd, diffh))).rjust(3)} "
+                f"{(f'{diffmin}m' * any((diffy, diffm, diffd, diffh, diffmin))).rjust(3)}"
+            )
 
             if diffmin <= 30 and sum((diffy, diffm, diffd, diffh)) == 0:
                 output = f"LESS THAN {diffmin} MIN".rjust(19)
 
-        self.TL.info(f"{output}")
-
+        self.TL.info(output)
         return output
 
     def clear_tasks(self):
-        open(self.tasks_path, 'w').close()
+        open(self.tasks_path, 'w', encoding="utf-8").close()
+        open(self.meta_tasks_path, 'w', encoding="utf-8").close()
         self.TL.function("all current tasks cleared")
 
     def is_valid_task(self, task):
         self.TL.function(f"CHECKING IF '{task}' IS VALID TASK STRING")
-        # checks if the given string is of valid task form
-        # YY:mm:HH:MM:ss{TAB}[text]{TAB}[text]
         try:
             ttime, tname, tdesc = task.split("\t", 2)
-        except ValueError:  # not enough values to unpack
+        except ValueError:
             self.TL.error("GIVEN TASK STRING IS INVALID (unpack error)")
             return False
+
         try:
             s1_conditions = (
-                not all((ttime, tname.strip())),  # name and time cannot be empty
-                not 1 <= len(tname.strip()) <= 30,  # task name between 1 and 30 chars
-                len(tdesc.strip()) > 168,  # task description cannot be more than 168 characters
-                len(ttime) != 14,  # "yy:mm:dd:HH:MM"
-                not str(self.current_year)[-2:] <= ttime[:2] <= '99',  # year -> CURRENT to 2099
+                not all((ttime, tname.strip())),
+                not 1 <= len(tname.strip()) <= 30,
+                len(tdesc.strip()) > 168,
+                len(ttime) != 14,
+                not str(self.current_year)[-2:] <= ttime[:2] <= '99',
             )
         except IndexError:
             self.TL.error("GIVEN TASK STRING IS INVALID (index error)")
             return False
 
-        self.TL.info(s1_conditions)
         if any(s1_conditions):
-            self.TL.error(f"GIVEN TASK STRING IS INVALID (any cond1)")
+            self.TL.error("GIVEN TASK STRING IS INVALID (any cond1)")
             return False
 
         try:
             datetime.datetime.strptime(ttime, "%y:%m:%d:%H:%M")
         except ValueError:
-            self.TL.error(f"GIVEN TASK STRING IS INVALID (date conversion)")
+            self.TL.error("GIVEN TASK STRING IS INVALID (date conversion)")
             return False
 
-        self.TL.info(f"GIVEN TASK STRING IS VALID")
         return True
+
+    @staticmethod
+    def task_identity(task):
+        ttime, tname, _ = task.split("\t", 2)
+        return f"{ttime}\t{tname.strip()}"
+
+    def parse_deadline_to_datetime(self, tt):
+        return datetime.datetime.strptime(tt, "%y:%m:%d:%H:%M")
+
+    def read_meta_map(self):
+        self.check_tasks_txt()
+        meta_map = {}
+        for raw in self._read_text_compatible(self.meta_tasks_path).splitlines():
+            try:
+                key, category, priority, source, status = raw.split("\t", 4)
+            except ValueError:
+                continue
+            meta_map[key] = {
+                "category": category or "General",
+                "priority": (priority or "Medium").title(),
+                "source": source or "manual",
+                "status": status or "todo",
+            }
+        return meta_map
+
+    def write_meta_map(self, meta_map):
+        rows = []
+        for key, meta in sorted(meta_map.items()):
+            rows.append(
+                f"{key}\t{meta.get('category', 'General')}\t{meta.get('priority', 'Medium')}\t"
+                f"{meta.get('source', 'manual')}\t{meta.get('status', 'todo')}"
+            )
+        with open(self.meta_tasks_path, "w", encoding="utf-8") as meta_file:
+            meta_file.write("\n".join(rows))
+
+    def sync_meta_with_tasks(self, tasks):
+        meta_map = self.read_meta_map()
+        valid_keys = set()
+        for task in tasks:
+            key = self.task_identity(task)
+            valid_keys.add(key)
+            if key not in meta_map:
+                meta_map[key] = {
+                    "category": "General",
+                    "priority": "Medium",
+                    "source": "manual",
+                    "status": "todo",
+                }
+
+        for key in list(meta_map.keys()):
+            if key not in valid_keys:
+                del meta_map[key]
+
+        self.write_meta_map(meta_map)
+        return meta_map
+
+    def update_task_meta(self, task, category=None, priority=None, source=None, status=None):
+        meta_map = self.read_meta_map()
+        key = self.task_identity(task)
+        existing = meta_map.get(key, {
+            "category": "General",
+            "priority": "Medium",
+            "source": "manual",
+            "status": "todo",
+        })
+        if category is not None:
+            existing["category"] = category
+        if priority is not None:
+            existing["priority"] = priority.title()
+        if source is not None:
+            existing["source"] = source
+        if status is not None:
+            existing["status"] = status
+        meta_map[key] = existing
+        self.write_meta_map(meta_map)
+
+    def import_tasks_from_csv(self, csv_path):
+        tasks = self.read_and_sort_tasks_file()
+        imported = 0
+        with open(csv_path, newline='', encoding="utf-8-sig") as csv_file:
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                name = (row.get("name") or row.get("task") or "").strip()
+                deadline = (row.get("deadline") or row.get("due") or "").strip()
+                desc = (row.get("description") or "").strip()
+                category = (row.get("category") or "General").strip() or "General"
+                priority = (row.get("priority") or "Medium").strip().title() or "Medium"
+
+                if not name or not deadline:
+                    continue
+
+                parsed = None
+                for fmt in ("%Y-%m-%d %H:%M", "%Y/%m/%d %H:%M", "%Y-%m-%d", "%Y/%m/%d"):
+                    try:
+                        parsed = datetime.datetime.strptime(deadline, fmt)
+                        if " %H:%M" not in fmt:
+                            parsed = parsed.replace(hour=23, minute=59)
+                        break
+                    except ValueError:
+                        continue
+                if parsed is None:
+                    continue
+
+                tt = parsed.strftime("%y:%m:%d:%H:%M")
+                task_string = f"{tt}\t{name[:30]}\t{desc[:168]}"
+                if self.is_valid_task(task_string):
+                    tasks.append(task_string)
+                    imported += 1
+
+        tasks = self.remove_duplicates(self.strip_tasks(tasks))[:100]
+        self.write_tasks(tasks)
+        meta_map = self.sync_meta_with_tasks(tasks)
+        for task in tasks:
+            key = self.task_identity(task)
+            if meta_map[key].get("source") == "manual":
+                meta_map[key]["source"] = "import"
+                if meta_map[key].get("category") == "General":
+                    meta_map[key]["category"] = category if 'category' in locals() else "General"
+                if meta_map[key].get("priority") == "Medium":
+                    meta_map[key]["priority"] = priority if 'priority' in locals() else "Medium"
+        self.write_meta_map(meta_map)
+        return imported
 
     def strip_tasks(self, tlist):
         for i, task in enumerate(tlist):
             ttime, tname, tdesc = task.split("\t", 2)
             tlist[i] = f"{ttime}\t{tname.strip()}\t{tdesc.strip()}"
-
         return tlist
 
     def write_tasks(self, last):
-        with open(self.tasks_path, "w") as taskfile:
+        with open(self.tasks_path, "w", encoding="utf-8") as taskfile:
             taskfile.write('\n'.join(last))
 
-        self.TL.function(f"wrote given tasks into newtasks.txt (new format)")
-        self.TL.info(last)
-
-    def read_and_sort_tasks_file(self):  # returns the current data sorted and separately in list
-        self.TL.function(f"starts -> read_and_sort_tasks_file()")
-
+    def read_and_sort_tasks_file(self):
         self.check_tasks_txt()
-        with open(self.tasks_path, "r") as taskfile:
-            self.TL.info(f"opened 'newtasks.txt' in read mode")
-            read_data = taskfile.read().split('\n')
-            taskslist = sorted(filter(self.is_valid_task, read_data))  # sorts filtered valid tasks from file
+        read_data = self._read_text_compatible(self.tasks_path).split('\n')
+        taskslist = sorted(filter(self.is_valid_task, read_data))
 
         if not self.converted():
-            self.TL.info("adding old tasks to new version")
             self.get_old_tasks()
-            taskslist = sorted(set(taskslist) | set(self.old_tasks))  # union of unique old and new tasks
+            taskslist = sorted(set(taskslist) | set(self.old_tasks))
             check_path = self.taskymain_path / 'old_checked'
             check_path.mkdir(parents=True, exist_ok=True)
 
         taskslist = self.remove_duplicates(self.strip_tasks(taskslist))
-        # remove old tasks that have a description in the new tasks file
 
-        self.TL.info(f"tasks list filtered and sorted")
-        self.TL.info(taskslist)
-
-        if len(taskslist) > 100:  # maximum tasks allowed = 100
-            self.TL.error("more than 100 tasks detected")
+        if len(taskslist) > 100:
             taskslist = taskslist[:100]
 
         self.write_tasks(taskslist)
-
-        self.TL.function(f"ends -> read_and_sort_tasks_file()")
+        self.sync_meta_with_tasks(taskslist)
         return taskslist
 
     def converted(self):
         check_path = self.taskymain_path / 'old_checked'
         return check_path.exists()
 
-    def get_old_tasks(self):  # tasks stored by previous versions of tasky, which cannot be directly read
-        self.TL.function("starts -> get_old_tasks()")
-
+    def get_old_tasks(self):
         self.check_tasks_txt()
-        with open(self.old_tasks_path, "r") as taskfile:
-            self.TL.info(f"opened 'tasks.txt' in read mode")
-
-            read_data = taskfile.read().split('\n')
-            self.TL.info(f"old tasks: {read_data}")
-
-            if not read_data:
-                self.TL.info("old tasks file empty")
-                self.old_tasks = []
-
-            converted_data = list(map(lambda task: '\t'.join(task.split("=", 2) + ['']), read_data))
-            self.TL.info(f"converted old tasks: {converted_data}")
-
-        self.old_tasks = sorted(filter(self.is_valid_task, converted_data))  # sorts filtered valid tasks from file
+        read_data = self._read_text_compatible(self.old_tasks_path).split('\n')
+        if not read_data:
+            self.old_tasks = []
+            return
+        converted_data = list(map(lambda task: '\t'.join(task.split("=", 2) + ['']), read_data))
+        self.old_tasks = sorted(filter(self.is_valid_task, converted_data))
 
     def remove_duplicates(self, tlist):
         final = []
@@ -356,37 +462,106 @@ class Functions:
         return final
 
     def remove(self, num, last_copy):
-        self.TL.function(f"starts -> remove({num})")
-
         last = last_copy
-        self.TL.info(f"stored tasks as 'last'")
-
-        self.TL.info(f"task {num} requested to be removed ")
         try:
+            target = last[int(num) - 1]
+            key = self.task_identity(target)
             last.pop(int(num) - 1)
         except IndexError:
-            self.TL.error("invalid task number to be removed")
             return
-        self.TL.info(f"removed requested task from the list")
-        self.TL.info(last)
 
         self.write_tasks(last)
-        self.TL.info(f"wrote new output to 'newtasks.txt'")
+        meta_map = self.read_meta_map()
+        if key in meta_map:
+            del meta_map[key]
+            self.write_meta_map(meta_map)
 
-        self.TL.function(f"ends -> remove({num})")
+    def calculate_risk_score(self, task_time, priority="Medium"):
+        try:
+            deadline = self.parse_deadline_to_datetime(task_time)
+        except ValueError:
+            return 0
 
-    def return_deadlines(self, given_tasks_list=False):
-        tasks = given_tasks_list
-        if not given_tasks_list:
-            tasks = self.read_and_sort_tasks_file()
+        now = datetime.datetime.now()
+        remaining_hours = (deadline - now).total_seconds() / 3600
+        priority_weight = self.PRIORITY_SCORES.get(priority.lower(), 2)
 
+        if remaining_hours <= 0:
+            return 100
+        if remaining_hours <= 24:
+            base = 85
+        elif remaining_hours <= 72:
+            base = 65
+        elif remaining_hours <= 168:
+            base = 45
+        else:
+            base = 25
+
+        return min(100, int(base + priority_weight * 4))
+
+    def return_deadlines_with_meta(self, given_tasks_list=False):
+        tasks = given_tasks_list if given_tasks_list else self.read_and_sort_tasks_file()
+        meta_map = self.sync_meta_with_tasks(tasks)
         deadlines = []
 
         for i, task in enumerate(tasks):
             ttime, tname, tdesc = task.split("\t", 2)
+            key = self.task_identity(task)
+            meta = meta_map.get(key, {
+                "category": "General",
+                "priority": "Medium",
+                "source": "manual",
+                "status": "todo",
+            })
             deadline = self.timediff(ttime)
-            num = str(i + 1)
+            risk = self.calculate_risk_score(ttime, meta.get("priority", "Medium"))
 
-            deadlines.append((num, deadline, tname, tdesc))
+            deadlines.append({
+                "num": str(i + 1),
+                "deadline_text": deadline,
+                "name": tname,
+                "desc": tdesc,
+                "ttime": ttime,
+                "category": meta.get("category", "General"),
+                "priority": meta.get("priority", "Medium"),
+                "source": meta.get("source", "manual"),
+                "status": meta.get("status", "todo"),
+                "risk": risk,
+            })
 
         return deadlines
+
+    def return_deadlines(self, given_tasks_list=False):
+        data = self.return_deadlines_with_meta(given_tasks_list)
+        return [(d["num"], d["deadline_text"], d["name"], d["desc"]) for d in data]
+
+    def analyze_user_state(self):
+        tasks = self.return_deadlines_with_meta()
+        if not tasks:
+            return {
+                "focus_score": 100,
+                "overdue_ratio": 0.0,
+                "high_risk_count": 0,
+                "nudge": "今天没有待办，保持节奏即可。",
+            }
+
+        overdue = [t for t in tasks if t["deadline_text"].strip() == "Task Expired"]
+        high_risk = [t for t in tasks if t["risk"] >= 75]
+
+        overdue_ratio = len(overdue) / len(tasks)
+        risk_ratio = len(high_risk) / len(tasks)
+        focus_score = max(0, int(100 - overdue_ratio * 50 - risk_ratio * 35))
+
+        if overdue_ratio > 0.35:
+            nudge = "你有较多已过期任务，先清理 1 个最小任务建立动量。"
+        elif risk_ratio > 0.40:
+            nudge = "高风险任务偏多：建议先做 25 分钟冲刺，优先 High/Critical。"
+        else:
+            nudge = "状态可控：继续按优先级推进，先完成再完美。"
+
+        return {
+            "focus_score": focus_score,
+            "overdue_ratio": round(overdue_ratio, 2),
+            "high_risk_count": len(high_risk),
+            "nudge": nudge,
+        }

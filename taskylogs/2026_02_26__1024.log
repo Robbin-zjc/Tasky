@@ -1,0 +1,130 @@
+2026-02-26 10:24:12.10 >> [INFO] Tasky's functions accessed
+2026-02-26 10:24:12.10 >> [INFO] defined datasets for months, month names and special inputs
+2026-02-26 10:24:12.13 >> [FUNCTION] output screen cleared
+2026-02-26 10:24:12.14 >> [INFO] PROGRAM STARTED
+2026-02-26 10:24:12.14 >> [FUNCTION] starts -> status()
+2026-02-26 10:24:12.14 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:12.14 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:12.14 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:12.14 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:12.14 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:12.14 >> [INFO] []
+2026-02-26 10:24:12.14 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:12.14 >> [INFO] []
+2026-02-26 10:24:12.14 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:12.14 >> [INFO] stored current tasks in 'task_list'
+2026-02-26 10:24:12.14 >> [INFO] no tasks available to display
+2026-02-26 10:24:12.14 >> [INFO] refreshed output screen
+2026-02-26 10:24:12.14 >> [INFO] status bar: enter 'help' to view valid commands
+2026-02-26 10:24:12.14 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:12.14 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:12.14 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:12.15 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:12.15 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:12.15 >> [INFO] []
+2026-02-26 10:24:12.15 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:12.15 >> [INFO] []
+2026-02-26 10:24:12.15 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:12.15 >> [INFO] current total number of tasks: 0
+2026-02-26 10:24:12.15 >> [WAITING] FOR MAIN USER INPUT
+2026-02-26 10:24:27.16 >> [INFO] Tasky's functions accessed
+2026-02-26 10:24:27.16 >> [INFO] defined datasets for months, month names and special inputs
+2026-02-26 10:24:27.20 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:27.20 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:27.20 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:27.20 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:27.20 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:27.20 >> [INFO] []
+2026-02-26 10:24:27.20 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:27.20 >> [INFO] []
+2026-02-26 10:24:27.20 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:27.20 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:27.20 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:27.20 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:27.20 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:27.20 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:27.20 >> [INFO] []
+2026-02-26 10:24:27.20 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:27.20 >> [INFO] []
+2026-02-26 10:24:27.20 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:42.20 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:42.20 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:42.20 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:42.20 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:42.20 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:42.20 >> [INFO] []
+2026-02-26 10:24:42.20 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:42.20 >> [INFO] []
+2026-02-26 10:24:42.21 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:42.21 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:42.21 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:42.21 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:42.21 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:42.21 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:42.21 >> [INFO] []
+2026-02-26 10:24:42.21 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:42.21 >> [INFO] []
+2026-02-26 10:24:42.21 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:45.77 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:45.77 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:45.78 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:45.78 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:45.78 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:45.78 >> [INFO] []
+2026-02-26 10:24:45.78 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:45.78 >> [INFO] []
+2026-02-26 10:24:45.78 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:45.78 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:45.78 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:45.78 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:45.78 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:45.78 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:45.78 >> [INFO] []
+2026-02-26 10:24:45.78 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:45.79 >> [INFO] []
+2026-02-26 10:24:45.79 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:46.97 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:46.97 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:46.97 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:46.97 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:46.97 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:46.97 >> [INFO] []
+2026-02-26 10:24:46.97 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:46.97 >> [INFO] []
+2026-02-26 10:24:46.97 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:46.97 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:46.97 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:46.97 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:46.97 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:46.97 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:46.97 >> [INFO] []
+2026-02-26 10:24:46.97 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:46.97 >> [INFO] []
+2026-02-26 10:24:46.97 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:58.57 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:58.57 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:58.57 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:58.58 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:58.58 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:58.58 >> [INFO] []
+2026-02-26 10:24:58.58 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:58.58 >> [INFO] []
+2026-02-26 10:24:58.58 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:24:58.58 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:24:58.58 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:24:58.58 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:24:58.58 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:24:58.58 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:24:58.58 >> [INFO] []
+2026-02-26 10:24:58.58 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:24:58.58 >> [INFO] []
+2026-02-26 10:24:58.58 >> [FUNCTION] ends -> read_and_sort_tasks_file()
+2026-02-26 10:25:00.10 >> [FUNCTION] starts -> read_and_sort_tasks_file()
+2026-02-26 10:25:00.10 >> [INFO] opened 'newtasks.txt' in read mode
+2026-02-26 10:25:00.11 >> [FUNCTION] CHECKING IF '' IS VALID TASK STRING
+2026-02-26 10:25:00.11 >> [ERROR] GIVEN TASK STRING IS INVALID (unpack error)
+2026-02-26 10:25:00.11 >> [INFO] tasks list filtered and sorted
+2026-02-26 10:25:00.11 >> [INFO] []
+2026-02-26 10:25:00.11 >> [FUNCTION] wrote given tasks into newtasks.txt (new format)
+2026-02-26 10:25:00.11 >> [INFO] []
+2026-02-26 10:25:00.11 >> [FUNCTION] ends -> read_and_sort_tasks_file()
